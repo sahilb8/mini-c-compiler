@@ -36,8 +36,8 @@ digit [0-9]
 "//".*                            {;}
 
 	/*If the quoted string ends with a backslash before the closing quotation
-	mark, it uses yyless() to push back the closing quote, and yyrnore () (q.v.)
-	to tell lex to append the next token to this one. The next token will be the
+	mark, it uses yyless() to push back the closing quote, and yyrnore () to 
+	tell lex to append the next token to this one. The next token will be the
 	rest of the quoted string starting with the pushed back quote, so the entire
 	string will end up in yytext.*/
 
