@@ -16,14 +16,13 @@
 
  /* Short hand assignment operators */
 %token MUL_EQ DIV_EQ MOD_EQ ADD_EQ SUB_EQ
-%token LEFT_ASSIGN RIGHT_ASSIGN AND_ASSIGN XOR_ASSIGN OR_ASSIGN
 %token INCREMENT DECREMENT
 
  /* Data types */
 %token SHORT INT LONG LONG_LONG SIGNED UNSIGNED CONST
 
  /* Keywords */
-%token IF FOR WHILE CONTINUE BREAK RETURN
+%token IF FOR WHILE CONTINUE BREAK RETURN ELSE
 
 %start start
 
@@ -38,23 +37,26 @@
 %right '!'
 
 
-
-%nonassoc ELSE
-
-
 %%
 
 
  /* Program is made up of multiple builder blocks. */
 start: start builder
-			 |builder;
+       |builder;
 
  /* Each builder block is either a function or a declaration */
-builder: function|
-       declaration;
+builder: header_file
+	 |function
+         |declaration
+	;
+
+header_file: HEADER_FILE
+	    |header_file
+	;
+
 
  /* This is how a function looks like */
-function: type IDENTIFIER '(' argument_list ')' compound_stmt;
+function: type IDENTIFIER '(' argument_list ')' '{' statements '}';
 
  /* Now we will define a grammar for how types can be specified */
 
@@ -77,7 +79,7 @@ type_specifier :INT
     |SHORT INT                      
     |SHORT                         
     |LONG                         
-	|LONG INT                     
+    |LONG INT                     
     |LONG_LONG                       
     |LONG_LONG INT                     
     ;
@@ -97,13 +99,10 @@ arg :type IDENTIFIER
    ;
 
  /* Generic statement. Can be compound or a single statement */
-stmt:compound_stmt
-    |single_stmt
+stmt:'{' statements '}'
+      |single_stmt
     ;
-
- /* The function body is covered in braces and has multiple statements. */
-compound_stmt :'{' statements '}'
-    ;
+  
 
 statements:statements stmt
     |
@@ -126,10 +125,10 @@ for_block:FOR '(' expression_stmt  expression_stmt ')' stmt
     ;
 
 if_block:IF '(' expression ')' stmt 
-				|IF '(' expression ')' stmt ELSE stmt
+	|IF '(' expression ')' stmt ELSE stmt
     ;
 
-while_block: WHILE '(' expression	')' stmt
+while_block: WHILE '(' expression ')' stmt
 		;
 
 declaration:type declaration_list ';'
@@ -223,9 +222,11 @@ parameter_list:
               ;
 
 parameter: sub_expr
-					|STRING
+	   |STRING
 
         ;
+
+
 %%
 
 #include "lex.yy.c"
@@ -246,10 +247,6 @@ int main(int argc, char *argv[])
 	{
 			printf("\nParsing failed\n");
 	}
-
-
-	
-
 
 	fclose(yyin);
 	return 0;
