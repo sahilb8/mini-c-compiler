@@ -13,6 +13,7 @@ int main()
     }
   }
 
+
   diff = x - y;
   int rem = x % y;
   printf ("Total = %d \n", total);

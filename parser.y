@@ -45,15 +45,15 @@ start: start builder
        |builder;
 
  /* Each builder block is either a function or a declaration */
-builder: header_file
-	 |function
+builder: //header_file
+	 function
          |declaration
 	;
-
+/*
 header_file: HEADER_FILE
 	    |header_file
 	;
-
+*/
 
  /* This is how a function looks like */
 function: type IDENTIFIER '(' argument_list ')' '{' statements '}';

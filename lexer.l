@@ -37,7 +37,7 @@ hex [0-9a-f]
 "return"                          {return RETURN;}
 
 {identifier}                      {return  IDENTIFIER;}
-{ws}                              ;
+{ws}                              {;}
 [+\-]?[0][x|X]{hex}+[lLuU]?        {return  HEX_CONSTANT;}
 [+\-]?{digit}+[lLuU]?              {return  DEC_CONSTANT;}
 	/*l is long suffix and u is unsigned suffix*/
@@ -50,7 +50,7 @@ hex [0-9a-f]
 <CMNT><<EOF>>                     {printf("Line %3d: Unterminated comment\n", cmnt_strt); yyterminate();}
 ^"#include"                       {BEGIN PREPROC;}
 <PREPROC>"<"[^<>\n]+">"            {return HEADER_FILE;}
-<PREPROC>{ws}                       ;
+<PREPROC>{ws}                      {;}
 <PREPROC>\"[^"\n]+\"              {return HEADER_FILE;}
 <PREPROC>\n                       {yylineno++; BEGIN INITIAL;}
 <PREPROC>.                        {printf("Line %3d: Illegal header file format \n",yylineno);}
